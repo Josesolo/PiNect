@@ -1,0 +1,16 @@
+#First off, Always preform a Sudo update and Sudo Upgrade
+#This way you have the latest drivers and software installed
+
+Sudo apt-get update
+Sudo apt-get upgrade
+
+#Depending on when the last time you did this to your Pi, this could take a while
+#Mine took upwards of 15 minutes to finally finishing upgrading
+#Next we're going to set up the Kinect under Dev/VideoX so that we can use it as a camera
+
+modprobe videodev
+modprobe gspca_main
+modprobe gspca_kinect
+
+#Now your Raspberry Pi should be connected with the Kinect
+
