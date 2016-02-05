@@ -1,0 +1,122 @@
+#Now that we have the Kinect setup, we're going to do a basic test/project to make sure it's working
+
+
+#Whenever you're adding something new to the Pi always make sure to sudo update and sudo upgrade prior to installing new software
+
+Sudo apt-get update
+
+Sudo apt-get upgrade
+
+#Next we're going to install FSWebcam, which will allow us to take pictures using the Kinect
+
+sudo apt-get install fswebcam
+
+#Next, to make sure that the Kinect and software were set up correctly, let's take a test photo
+#Enter the following code (You can change the word image to whatever you want since that's going to be the file name)
+
+fswebcam image.jpg
+
+#Now you should have a file located on your Pi, you'll know if it worked if you recieve this,
+
+--- Opening /dev/video0...
+Trying source module v4l2...
+/dev/video0 opened.
+No input was specified, using the first.
+Adjusting resolution from 384x288 to 352x288.
+--- Capturing frame...
+Corrupt JPEG data: 2 extraneous bytes before marker 0xd4
+Captured frame in 0.00 seconds.
+--- Processing captured image...
+Writing JPEG image to 'image.jpg'.
+
+#If you didn't receive this and instead received something like, input not found, error, or something along those lines, 
+#You maybe did not have your Kinect setup as a webcam, but if you did get the correct message, then you will have a picture of whatever 
+#The Kinect was aiming at
+
+
+#Incase you did not want the banner located at the bottom of the image present, you can remove it by using --no-banner, or use the example below
+
+fswebcam -r 1280x720 --no-banner image2.jpg
+
+#This will take a new photo without the banner and now have a specified image size (In this case 1280x720 which you can change with the following code)
+
+fswebcam -r 1280x720  image3.jpg
+
+#You can set the desired dimensions by swapping out those numbers
+
+
+#Now instead of having to constantly change the image name, and type all that long code, we can make a Bash script
+#So that we can change run the script and it will take a photo, automatically update the name and store it in your prefered location
+#To do so, use the following
+
+#First if you want to store the files in their own location, we first need to make a directory for them
+
+mkdir SecretCam
+
+#You can change the name SecretCam to whatever you want to call your new folder but now that we have a new folder
+#We can start working on the Bash script
+
+#If you're doing this in the terminal you're going to use
+
+Sudo nano FILENAME
+
+#Again change FILENAME to whatever you want to call the file like Camprogam or Camscript
+
+
+#If you're on the desktop open your prefered text editor and call the file whatever
+
+#Personally it is a lot easier if you do it on the terminal, this way you don't have to try and move your file where the action Chmod will actually work
+#Once you're in the editor copy the following;
+
+
+#!/bin/bash
+
+DATE=$(date +"%Y-%m-%d_%H%M")
+
+fswebcam -r 1280x720 --no-banner /home/pi/SecretCam/$DATE.jpg
+
+#So what this is doing, is it's creating the DATE variable which we will use as the filename and it's also calling upon fswebcam action
+#So that whenever the script is exucuted, it runs said action
+#Finally, it's saving the file to the location we made above (SecretCam) and it's giving each photo it's own file name so that we don't have to do that manually
+
+#Next save it as FILENAME.sh
+#Remember, swap out FILENAME for you're own file name
+
+#If you did this in the terminal use the following code
+
+chmod +x FILENAME.sh
+
+#This makes the bash script we just created exucutable
+
+#If you did this on the desktop, it may say cannot find file
+#To get around this either move the file so that Chmod can find it or hop over to the pure terminal and re-enter the bash script and save it again
+#You may also have to add Sudo before the chmod
+
+#Now that our bash script is exucutable, we can run it by using the following code
+
+./FILENAME.sh
+
+#Again you may have to add Sudo with ./FILENAME.sh to bypass the permission denied message (If you get it)
+
+#Now we'll get the following message if it's done correctly
+
+--- Opening /dev/video0...
+Trying source module v4l2...
+/dev/video0 opened.
+No input was specified, using the first.
+--- Capturing frame...
+Corrupt JPEG data: 2 extraneous bytes before marker 0xd6
+Captured frame in 0.00 seconds.
+--- Processing captured image...
+Disabling banner.
+Writing JPEG image to '/home/pi/SecretCam/2016-04-02_0740.jpg'.
+
+#Of course the filename will be different because it automatically updates the new filename, but it will follow that same structure
+
+
+#Other Help
+
+#Sometimes the image may get messed up, it happens, run the file again and if the photo is still constantly deformed, it may have something to do with the camera
+#To by-pass any permission denied's, try adding sudo
+
+Hope this helps!
